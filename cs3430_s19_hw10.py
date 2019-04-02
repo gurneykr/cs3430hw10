@@ -24,26 +24,27 @@ def save_gd_edges(input_fp, output_fp, magn_thresh=20):
 
 def gd_detect_edges(rgb_img, magn_thresh=20):
     ## gray scale image
-    greyed = rgb_img.convert('LA')
+    greyed = rgb_img.convert('L')
     img = Image.new('L', greyed.size)
 
     for row in range(img.size[0]):
-        for col in range(img.size[1]):
-            if col > 1 and col < greyed.size[1] and row > 1 and row < greyed.size[0]:
-                # pixel = greyed.getpixel((row, col))
-                above = greyed.getpixel((row-1, col))
-                below = greyed.getpixel((row+1, col))
-                right = greyed.getpixel((row, col+1))
-                left = greyed.getpixel((row, col-1))
-                dy = above - below
-                dx = right - left
-                if dx == 0:
-                    dx = 1
-                G = math.sqrt(dy**2 + dx**2)
-                if G > magn_thresh:
-                    img.putpixel((row, col), 255)
-                else:
-                    img.putpixel((row, col), 0)
+        if row > 0:
+            for col in range(img.size[1]):
+                if col > 1 and col < greyed.size[1]-1 and row > 1 and row < greyed.size[0]-1:
+                    # pixel = greyed.getpixel((row, col))
+                    above = greyed.getpixel((row-1, col))
+                    below = greyed.getpixel((row+1, col))
+                    right = greyed.getpixel((row, col+1))
+                    left = greyed.getpixel((row, col-1))
+                    dy = above - below
+                    dx = right - left
+                    if dx == 0:
+                        dx = 1
+                    G = math.sqrt(dy**2 + dx**2)
+                    if G > magn_thresh:
+                        img.putpixel((row, col), 255)
+                    else:
+                        img.putpixel((row, col), 0)
 
     return img
     #compute dx and dy
