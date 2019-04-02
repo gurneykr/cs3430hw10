@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import math
-import Image
+from PIL import Image
 
 #######################################################
 # module: cs3430_s19_hw10.py
@@ -23,8 +23,39 @@ def save_gd_edges(input_fp, output_fp, magn_thresh=20):
     del output_image
 
 def gd_detect_edges(rgb_img, magn_thresh=20):
-    ## your code here
-    pass
+    ## gray scale image
+    greyed = rgb_img.convert('LA')
+    img = Image.new('L', greyed.size)
+
+    for row in range(img.size[0]):
+        for col in range(img.size[1]):
+            if col > 1 and col < greyed.size[1] and row > 1 and row < greyed.size[0]:
+                # pixel = greyed.getpixel((row, col))
+                above = greyed.getpixel((row-1, col))
+                below = greyed.getpixel((row+1, col))
+                right = greyed.getpixel((row, col+1))
+                left = greyed.getpixel((row, col-1))
+                dy = above - below
+                dx = right - left
+                if dx == 0:
+                    dx = 1
+                G = math.sqrt(dy**2 + dx**2)
+                if G > magn_thresh:
+                    img.putpixel((row, col), 255)
+                else:
+                    img.putpixel((row, col), 0)
+
+    return img
+    #compute dx and dy
+    #dy = I(c, r-1) - I(c, r+1)
+    #dx = I(c+1, r) - I(c-1, r)
+
+    #gradient's magnitude at I(c,r) = sqrt(dy^2 + dx^2)
+    #if dx = 0
+
+    #compute gradient's magnitude and direction for each pixel
+
+
 
 
 ###################### Problem 2 (1 point) #####################
@@ -115,13 +146,13 @@ def test_jaccard_sim(img_fp1, img_fp2):
 
 def test_01():
     save_gd_edges('img/1b_bee_01.png', 'img/1b_bee_01_ed.png', magn_thresh=20)
-    save_gd_edges('img/1b_bee_10.png', 'img/1b_bee_10_ed.png', magn_thresh=20)
-    save_gd_edges('img/2b_nb_10.png', 'img/2b_nb_10_ed.png', magn_thresh=20)
-    save_gd_edges('img/2b_nb_21.png', 'img/2b_nb_21_ed.png', magn_thresh=20)
-    save_gd_edges('img/elephant.jpg', 'img/elephant_ed.jpg', magn_thresh=20)
-    save_gd_edges('img/output11885.jpg', 'img/output11885_ed.jpg', magn_thresh=20)
-    save_gd_edges('img/2b_nb_09.png', 'img/2b_nb_09_ed.png', magn_thresh=20)
-    save_gd_edges('img/output11884.jpg', 'img/output11884_ed.jpg', magn_thresh=20)
+    # save_gd_edges('img/1b_bee_10.png', 'img/1b_bee_10_ed.png', magn_thresh=20)
+    # save_gd_edges('img/2b_nb_10.png', 'img/2b_nb_10_ed.png', magn_thresh=20)
+    # save_gd_edges('img/2b_nb_21.png', 'img/2b_nb_21_ed.png', magn_thresh=20)
+    # save_gd_edges('img/elephant.jpg', 'img/elephant_ed.jpg', magn_thresh=20)
+    # save_gd_edges('img/output11885.jpg', 'img/output11885_ed.jpg', magn_thresh=20)
+    # save_gd_edges('img/2b_nb_09.png', 'img/2b_nb_09_ed.png', magn_thresh=20)
+    # save_gd_edges('img/output11884.jpg', 'img/output11884_ed.jpg', magn_thresh=20)
 
 ## testing the PIL/PILLOW installation
 def test_02():
@@ -131,6 +162,6 @@ def test_02():
     del img2
     
 if __name__ == '__main__':
-    pass
+    test_01()
 
 
