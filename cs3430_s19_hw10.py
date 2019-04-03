@@ -71,20 +71,6 @@ def cosine_sim(img1, img2):
     return top_sum / (math.sqrt(bottom_left_sum)* (math.sqrt(bottom_right_sum)))
 
 
-'''
->>> test_cosine_sim('img/2b_nb_09_ed.png', 'img/2b_nb_09_ed.png')
-('img/2b_nb_09_ed.png', 'img/2b_nb_09_ed.png')
-1.0
->>> test_cosine_sim('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
-('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
-0.512202985103
->>> test_cosine_sim('img/output11884_ed.jpg', 'img/output11885_ed.jpg')
-('img/output11884_ed.jpg', 'img/output11885_ed.jpg')
-0.352152693884
->>> test_cosine_sim('img/output11885_ed.jpg', 'img/output11884_ed.jpg')
-('img/output11885_ed.jpg', 'img/output11884_ed.jpg')
-0.352152693884
-'''
 def test_cosine_sim(img_fp1, img_fp2):
     img1 = Image.open(img_fp1)
     img2 = Image.open(img_fp2)
@@ -96,20 +82,17 @@ def test_cosine_sim(img_fp1, img_fp2):
 
 def euclid_sim(img1, img2):
     assert img1.size == img2.size
-    ## your code here
-    pass
+    U = img1.convert('L')
+    V = img2.convert('L')
+    sum = 0
 
-'''
->>> test_euclid_sim('img/2b_nb_10_ed.png', 'img/2b_nb_10_ed.png')
-('img/2b_nb_10_ed.png', 'img/2b_nb_10_ed.png')
-0.0
->>> test_euclid_sim('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
-('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
-16981.9278941
->>> test_euclid_sim('img/2b_nb_10_ed.png', 'img/2b_nb_09_ed.png')
-('img/2b_nb_10_ed.png', 'img/2b_nb_09_ed.png')
-16981.9278941
-'''
+    for row in range(img1.size[0]):
+        for col in range(img1.size[1]):
+            sum += (U.getpixel((row, col)) - V.getpixel((row, col)))**2
+
+
+    return math.sqrt(sum)
+
 def test_euclid_sim(img_fp1, img_fp2):
     img1 = Image.open(img_fp1)
     img2 = Image.open(img_fp2)
@@ -181,7 +164,20 @@ def test_03():
     # ('img/output11885_ed.jpg', 'img/output11884_ed.jpg')
     # 0.352152693884
     #
+
+def test_04():
+
+    test_euclid_sim('img/2b_nb_10_ed.png', 'img/2b_nb_10_ed.png')
+    # ('img/2b_nb_10_ed.png', 'img/2b_nb_10_ed.png')
+    # 0.0
+    test_euclid_sim('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
+    # ('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
+    # 16981.9278941
+    test_euclid_sim('img/2b_nb_10_ed.png', 'img/2b_nb_09_ed.png')
+    # ('img/2b_nb_10_ed.png', 'img/2b_nb_09_ed.png')
+    # 16981.9278941
+
 if __name__ == '__main__':
-    test_03()
+    test_04()
 
 
