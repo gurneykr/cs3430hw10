@@ -106,7 +106,6 @@ def jaccard_sim(img1, img2):
     assert img1.size == img2.size
     img_1 = img1.convert('L')
     img_2 = img2.convert('L')
-    sum = 0
 
     S1 = set()
     S2 = set()
@@ -120,8 +119,6 @@ def jaccard_sim(img1, img2):
     bottom = S1.union(S2)
 
     return float(len(top) / len(bottom))
-
-
 
 
 def test_jaccard_sim(img_fp1, img_fp2):
