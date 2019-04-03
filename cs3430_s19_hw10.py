@@ -47,24 +47,29 @@ def gd_detect_edges(rgb_img, magn_thresh=20):
                         img.putpixel((row, col), 0)
 
     return img
-    #compute dx and dy
-    #dy = I(c, r-1) - I(c, r+1)
-    #dx = I(c+1, r) - I(c-1, r)
-
-    #gradient's magnitude at I(c,r) = sqrt(dy^2 + dx^2)
-    #if dx = 0
-
-    #compute gradient's magnitude and direction for each pixel
-
-
 
 
 ###################### Problem 2 (1 point) #####################
 
 def cosine_sim(img1, img2):
     assert img1.size == img2.size
-    ## your code here
-    pass
+    greyed_img1 = img1.convert('L')
+    greyed_img2 = img2.convert('L')
+
+    top_sum = 0
+    bottom_left_sum = 0
+    bottom_right_sum = 0
+
+    for row in range(img1.size[0]):
+        for col in range(img1.size[1]):
+            temp = greyed_img1.getpixel((row,col))
+            top_sum += greyed_img1.getpixel((row,col)) * greyed_img2.getpixel((row,col))
+
+            bottom_left_sum += greyed_img1.getpixel((row,col))**2
+            bottom_right_sum += greyed_img2.getpixel((row,col))**2
+
+    return top_sum / (math.sqrt(bottom_left_sum)* (math.sqrt(bottom_right_sum)))
+
 
 '''
 >>> test_cosine_sim('img/2b_nb_09_ed.png', 'img/2b_nb_09_ed.png')
@@ -161,8 +166,22 @@ def test_02():
     img2 = img.save('img/1b_bee_01_gray.png')
     del img
     del img2
-    
+
+def test_03():
+    test_cosine_sim('img/2b_nb_09_ed.png', 'img/2b_nb_09_ed.png')
+    # ('img/2b_nb_09_ed.png', 'img/2b_nb_09_ed.png')
+    # 1.0
+    test_cosine_sim('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
+    # ('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
+    # 0.512202985103
+    test_cosine_sim('img/output11884_ed.jpg', 'img/output11885_ed.jpg')
+    # ('img/output11884_ed.jpg', 'img/output11885_ed.jpg')
+    # 0.352152693884
+    test_cosine_sim('img/output11885_ed.jpg', 'img/output11884_ed.jpg')
+    # ('img/output11885_ed.jpg', 'img/output11884_ed.jpg')
+    # 0.352152693884
+    #
 if __name__ == '__main__':
-    test_01()
+    test_03()
 
 
