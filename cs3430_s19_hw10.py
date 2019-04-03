@@ -104,26 +104,26 @@ def test_euclid_sim(img_fp1, img_fp2):
 
 def jaccard_sim(img1, img2):
     assert img1.size == img2.size
-    ## your code here
-    pass
+    img_1 = img1.convert('L')
+    img_2 = img2.convert('L')
+    sum = 0
 
-'''
->>> test_jaccard_sim('img/2b_nb_10_ed.png', 'img/2b_nb_10_ed.png')
-('img/2b_nb_10_ed.png', 'img/2b_nb_10_ed.png')
-1.0
->>> test_jaccard_sim('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
-('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
-1.0
->>> test_jaccard_sim('img/2b_nb_10_ed.png', 'img/2b_nb_09_ed.png')
-('img/2b_nb_10_ed.png', 'img/2b_nb_09_ed.png')
-1.0
->>> test_jaccard_sim('img/output11885_ed.jpg', 'img/output11884_ed.jpg')
-('img/output11885_ed.jpg', 'img/output11884_ed.jpg')
-0.934065934066
->>> test_jaccard_sim('img/output11884_ed.jpg', 'img/output11885_ed.jpg')
-('img/output11884_ed.jpg', 'img/output11885_ed.jpg')
-0.934065934066
-'''
+    S1 = set()
+    S2 = set()
+
+    for row in range(img1.size[0]):
+        for col in range(img1.size[1]):
+            S1.add(img_1.getpixel((row,col)))
+            S2.add(img_2.getpixel((row, col)))
+
+    top = S1.intersection(S2)
+    bottom = S1.union(S2)
+
+    return float(len(top) / len(bottom))
+
+
+
+
 def test_jaccard_sim(img_fp1, img_fp2):
     img1 = Image.open(img_fp1)
     img2 = Image.open(img_fp2)
@@ -177,7 +177,26 @@ def test_04():
     # ('img/2b_nb_10_ed.png', 'img/2b_nb_09_ed.png')
     # 16981.9278941
 
+def test_05():
+
+    test_jaccard_sim('img/2b_nb_10_ed.png', 'img/2b_nb_10_ed.png')
+    # ('img/2b_nb_10_ed.png', 'img/2b_nb_10_ed.png')
+    # 1.0
+    test_jaccard_sim('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
+    # ('img/2b_nb_09_ed.png', 'img/2b_nb_10_ed.png')
+    # 1.0
+    test_jaccard_sim('img/2b_nb_10_ed.png', 'img/2b_nb_09_ed.png')
+    # ('img/2b_nb_10_ed.png', 'img/2b_nb_09_ed.png')
+    # 1.0
+    test_jaccard_sim('img/output11885_ed.jpg', 'img/output11884_ed.jpg')
+    # ('img/output11885_ed.jpg', 'img/output11884_ed.jpg')
+    # 0.934065934066
+    test_jaccard_sim('img/output11884_ed.jpg', 'img/output11885_ed.jpg')
+    # ('img/output11884_ed.jpg', 'img/output11885_ed.jpg')
+    # 0.934065934066
+    #
+
 if __name__ == '__main__':
-    test_04()
+    test_05()
 
 
